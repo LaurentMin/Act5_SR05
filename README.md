@@ -20,6 +20,8 @@ On lance ensuite `nPCU` goroutines qui calculent la somme de chaque sous-tableau
 
 On récupère les sommes partielle dans le channel et on les additionne pour obtenir la somme totale.
 
+Chaques parties du tableau sont traitées par une goroutine différente pour paralléliser le calcul de la somme.
+
 ### Exemple
 
 ```bash
@@ -122,6 +124,8 @@ Un 0 est ajouter à `list_nb` pour signifier la fin du processus. Si un 0 est re
 La dernière goroutine envoie un 0 dans `resultChan` pour signifier la fin du processus.
 
 Par construction, les nombres premiers sont reçus dans `resultChan` dans le bon ordre.
+
+Le parallellisme est obtenu en créant une nouvelle goroutine pour chaque nombre premier trouvé. Les goroutines sont créées en cascade, chaque goroutine créant la suivante si nécessaire.
 
 ### Exemple
 

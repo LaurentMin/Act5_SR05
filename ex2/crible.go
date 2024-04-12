@@ -9,8 +9,7 @@ import (
 )
 
 func filtrer(i int, c chan int, resultChan chan int, wg *sync.WaitGroup) {
-	//defer wg.Done() // Marquer la fin de la goroutine lorsque la fonction se termine
-
+	
 	var flag bool = false // Flag pour indiquer si une nouvelle goroutine a été créée
 	cbis := make(chan int) // Canal pour la prochaine goroutine
 
@@ -35,6 +34,7 @@ func filtrer(i int, c chan int, resultChan chan int, wg *sync.WaitGroup) {
 				go filtrer(n, cbis, resultChan, wg)
 				flag = true
 			} else {
+				fmt.Println("goroutine ", i, " envoie ", n, " à la prochaine goroutine")
 				cbis <- n // Envoyer le nombre à la prochaine goroutine
 			}
 		} else {

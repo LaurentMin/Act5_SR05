@@ -4,19 +4,19 @@
 
 ### Utilisation
 
-Compiler avec go build sum.go
-Exécuter avec ./sum -n nb
+Compiler avec `go build sum.go`\
+Exécuter avec `./sum -n nb`\
 avec nb un nombre entier pour faire la somme de 1 à nb (par défaut nb = 10)
 
 ### Description
 
-Nous avons d'abord une fonction sommer() qui prend en paramètre une liste de nombres, un channel d'entier et un objet WaitGroup. La fonction envoie la somme de ces nombres dans un channel.
+Nous avons d'abord une fonction `sommer()` qui prend en paramètre une liste de nombres, un channel d'entier et un objet WaitGroup. La fonction envoie la somme de ces nombres dans un channel.
 
-On construit ensuite une liste de nombres de 1 à nb (nb étant le nombre passé en paramètre du programme ou 10 par défaut).
+On construit ensuite une liste de nombres de 1 à `nb` (`nb` étant le nombre passé en paramètre du programme ou 10 par défaut).
 
-On découpe ce tableau en nPCU sous-tableaux de taille égale avec plus ou moins 1 (nPCU étant le nombre de processeurs logiques de la machine).
+On découpe ce tableau en `nPCU` sous-tableaux de taille égale avec plus ou moins 1 (`nPCU` étant le nombre de processeurs logiques de la machine).
 
-On lance ensuite nPCU goroutines qui calculent la somme de chaque sous-tableau qui sont envoyer dans un channel.
+On lance ensuite `nPCU` goroutines qui calculent la somme de chaque sous-tableau qui sont envoyer dans un channel.
 
 On récupère les sommes partielle dans le channel et on les additionne pour obtenir la somme totale.
 
@@ -106,22 +106,22 @@ func main() {
 
 ### Utilisation
 
-Compiler avec go build crible.go
-Exécuter avec ./crible -n nb
-avec nb un nombre entier pour afficher les nombres premiers inférieurs ou égal à nb (par défaut nb = 10)
+Compiler avec `go build crible.go`
+Exécuter avec `./crible -n nb`
+avec nb un nombre entier pour afficher les nombres premiers inférieurs ou égal à `nb` (par défaut `nb` = 10)
 
 ### Description
 
-Nous avons une fonction filtrer() qui prend en paramètre un entier i, deux channel d'entier et un objet WaitGroup. La fonction envoie l'entier dans un channel à la goroutine suivante (la crée si elle n'existe pas encore) si il n'est pas un multiple de i.
+Nous avons une fonction `filtrer()` qui prend en paramètre un entier `i`, deux channel d'entier et un objet WaitGroup. La fonction envoie l'entier dans un channel à la goroutine suivante (la crée si elle n'existe pas encore) si il n'est pas un multiple de `i`.
 
-On initialise se processus de goroutines imbriquées avec go filtrer(2, list_nb, resultChan, &wg) pour filtrer les multiples de 2.
-list_nb est un channel qui contient les entiers à filtrer qui seront ajouter par une goroutine anonyme.
-resultChan est un channel qui permettra de récupérer le i de chaque goroutine.
+On initialise se processus de goroutines imbriquées avec `go filtrer(2, list_nb, resultChan, &wg)` pour filtrer les multiples de 2.\
+`list_nb` est un channel qui contient les entiers à filtrer qui seront ajouter par une goroutine anonyme.\
+`resultChan` est un channel qui permettra de récupérer le i de chaque goroutine.
 
-Un 0 est ajouter à list_nb pour signifier la fin du processus. Si un 0 est reçu par un goroutine filtrer(), il envoie un 0 à la goroutine suivante, envoie son i dans resultChan et se termine.
-La dernière goroutine envoie un 0 dans resultChan pour signifier la fin du processus.
+Un 0 est ajouter à `list_nb` pour signifier la fin du processus. Si un 0 est reçu par un goroutine `filtrer()`, il envoie un 0 à la goroutine suivante, envoie son `i` dans `resultChan` et se termine.
+La dernière goroutine envoie un 0 dans `resultChan` pour signifier la fin du processus.
 
-Par construction, les nombres premiers sont reçus dans resultChan dans le bon ordre.
+Par construction, les nombres premiers sont reçus dans `resultChan` dans le bon ordre.
 
 ### Exemple
 

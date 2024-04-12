@@ -28,13 +28,13 @@ func main() {
 	for i := 1; i <= *p_num; i++ {
 		tab[i-1] = i
 	}
-	fmt.Println("tableau =", tab)
+	//fmt.Println("tableau =", tab)
 
 	nbCPU := runtime.NumCPU()
-	fmt.Println("nbCPU =", nbCPU)
+	//fmt.Println("nbCPU =", nbCPU)
 
-	portion := *p_num / nbCPU
-	reste := *p_num % nbCPU
+	portion := *p_num / nbCPU // Calculer la taille de la portion
+	reste := *p_num % nbCPU // Calculer le reste
 	var flag int = 0
 	//fmt.Println("portion =", portion)
 	//fmt.Println("reste =", reste)
@@ -65,5 +65,5 @@ func main() {
 		s += sum
 	}
 
-	fmt.Println("somme =", s)
+	fmt.Println("La somme de 1 à", *p_num, "est" , s)
 }

@@ -9,20 +9,21 @@ import (
 )
 
 func filtrer(i int, c chan int, resultChan chan int, wg *sync.WaitGroup) {
-	defer wg.Done() // Marquer la fin de la goroutine lorsque la fonction se termine
+	//defer wg.Done() // Marquer la fin de la goroutine lorsque la fonction se termine
 
 	var flag bool = false // Flag pour indiquer si une nouvelle goroutine a été créée
 	cbis := make(chan int) // Canal pour la prochaine goroutine
-	defer close(c)
-	defer func() { resultChan <- i }() // Envoyer le numéro d'identification de la goroutine à la fin de la fonction
 
 	for n := range c {
 		if n == 0 {
-			if !flag {
+			resultChan <- i
+			if !flag {	
 				resultChan <- 0
+				close(cbis)
 			} else {
 				cbis <- 0
 			}
+			close(c)
 			break
 		}
 
@@ -40,6 +41,7 @@ func filtrer(i int, c chan int, resultChan chan int, wg *sync.WaitGroup) {
 			fmt.Println("goroutine ", i, " filtre ", n)
 		}
 	}
+	wg.Done() // Marquer la fin de la goroutine
 }
 
 func main() {
@@ -51,14 +53,14 @@ func main() {
 		return
 	}
 
-	list_nb := make(chan int)
+	list_nb := make(chan int, *p_num)
 	resultChan := make(chan int)
 
 	var wg sync.WaitGroup // Créer un WaitGroup
 
 	wg.Add(1) // Ajouter une goroutine à WaitGroup
 	go func() {
-		defer close(list_nb)
+		defer wg.Done() // Marquer la fin de la goroutine lorsque la fonction se termine
 		for i := 2; i <= *p_num; i++ {
 			list_nb <- i
 		}
@@ -68,9 +70,6 @@ func main() {
 	wg.Add(1) // Ajouter une goroutine à WaitGroup
 	go filtrer(2, list_nb, resultChan, &wg)
 
-	wg.Wait() // Attendre la fin de toutes les goroutines
-
-	// Afficher les nombres premiers
 	var results []string
 
 	for i := 2; i <= *p_num; i++ {
@@ -81,6 +80,9 @@ func main() {
 		results = append(results, strconv.Itoa(result))
 	}
 
+	wg.Wait() // Attendre la fin de toutes les goroutines
+
+	// Afficher les nombres premiers
 	fmt.Printf("Liste des nombres premiers jusqu'à %d : %s\n", *p_num, strings.Join(results, ", "))
 	close(resultChan)
 }
